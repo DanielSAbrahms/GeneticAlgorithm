@@ -64,6 +64,11 @@ public class Chromosome
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return String.copyValueOf(this.CH_gene);
+    }
 }
 
 

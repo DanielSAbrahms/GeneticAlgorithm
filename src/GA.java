@@ -161,13 +161,15 @@ public abstract class GA extends Object
         Chromosome prevBest = GA_pop.get(0);
         int numToConverge = 0;
 
-        while (numToConverge < 10)
+        while (!hasConverged() && (iterationCt < GA_numIterations))
         {
+            /*
             if(currBest.GetGenes().equals(prevBest.GetGenes())){
                 numToConverge++;
             } else {
                 numToConverge = 0;
             }
+            */
             Mate mate = new Mate(GA_pop,GA_numGenes,GA_numChromes);
             GA_pop = mate.Crossover(GA_pop,numPairs);
             Mutate();
@@ -178,15 +180,53 @@ public abstract class GA extends Object
 
             Chromosome chrome = GA_pop.get(0); //get the best guess
 
-            DisplayBest(iterationCt); //print it
+            //DisplayBest(iterationCt); //print it
 
+            System.out.println("IT: " + iterationCt + " | BEST: " + chrome.toString() + " | AVG: " + GA_pop.stream().mapToInt(p -> p.GetCost()).average().orElse(0));
+
+            /*
             if (chrome.Equals(GA_target)) //if it's equal to the target, stop
                 break;
+
             ++iterationCt;
 
             prevBest = currBest;
             currBest = chrome;
+            */
+            ++iterationCt;
         }
+    }
+
+    protected boolean hasConverged(){
+        // GA_pop is the arraylist containing all of our chromosomes
+        int sum = 0;
+        double average = 0;
+        if(!GA_pop.isEmpty()){
+            for(Chromosome chrom: GA_pop){
+                sum += chrom.GetCost();
+            }
+            average = (double) sum/GA_pop.size();
+        }
+
+        sum = 0;
+        double stddev = 0;
+        if(!GA_pop.isEmpty()){
+            for (Chromosome chrom: GA_pop){
+                sum += Math.pow((chrom.GetCost() - average), 2);
+            }
+            stddev = Math.sqrt( (double) sum / (GA_pop.size()));
+        }
+
+        if(!GA_pop.isEmpty()){
+            double tmp = 0;
+            for (Chromosome chrom : GA_pop){
+                tmp = (double) Math.abs(chrom.GetCost() - average);
+                if (tmp > stddev){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }
