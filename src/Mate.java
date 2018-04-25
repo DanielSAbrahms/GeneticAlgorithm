@@ -42,10 +42,19 @@ public class Mate
             }
 
             //right side
-            for (int i = crossPoint; i < MT_numGenes; i++)
-            {
-                MT_child1.SetGene(i, MT_mother.GetGene(i));
-                MT_child2.SetGene(i, MT_father.GetGene(i));
+
+            int childOneIndex = crossPoint;
+            int childTwoIndex = crossPoint;
+            for (int k = 0; k < MT_numGenes; k++) {
+                if (!MT_child1.Contains(MT_mother.GetGene(k))) {
+                    MT_child1.SetGene(childOneIndex, MT_mother.GetGene(k));
+                    childOneIndex++;
+                }
+
+                if (!MT_child2.Contains(MT_father.GetGene(k))) {
+                    MT_child2.SetGene(childTwoIndex, MT_father.GetGene(k));
+                    childTwoIndex++;
+                }
             }
 
             population.add(MT_posChild1,MT_child1);

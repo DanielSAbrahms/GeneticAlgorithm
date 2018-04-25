@@ -161,7 +161,7 @@ public abstract class GA extends Object
         Chromosome prevBest = GA_pop.get(0);
         int numToConverge = 0;
 
-        while (numToConverge < 3)
+        while (numToConverge < 10)
         {
             if(currBest.GetGenes().equals(prevBest.GetGenes())){
                 numToConverge++;
@@ -169,7 +169,7 @@ public abstract class GA extends Object
                 numToConverge = 0;
             }
             Mate mate = new Mate(GA_pop,GA_numGenes,GA_numChromes);
-            GA_pop = mate.DualPointCrossover(GA_pop,numPairs);
+            GA_pop = mate.Crossover(GA_pop,numPairs);
             Mutate();
 
             ComputeCost();
